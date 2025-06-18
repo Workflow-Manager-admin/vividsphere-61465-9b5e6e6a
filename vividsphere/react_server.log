@@ -43,3 +43,13 @@ cached modules 1.31 MiB [cached] 46 modules
 runtime modules 27.5 KiB 14 modules
 ./src/HouseholdCard.js 9.7 KiB [built] [code generated]
 webpack 5.99.9 compiled successfully in 66 ms
+assets by status 1.98 KiB [cached] 1 asset
+assets by path *.js 1.48 MiB
+  asset bundle.js 1.46 MiB [emitted] (name: main)
+  asset main.0c3a3a6d89f587a60667.hot-update.js 15.4 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.0c3a3a6d89f587a60667.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 1.48 MiB = bundle.js 1.46 MiB main.0c3a3a6d89f587a60667.hot-update.js 15.4 KiB
+cached modules 1.31 MiB [cached] 46 modules
+runtime modules 27.5 KiB 14 modules
+./src/CookingCard.js 11.7 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 119 ms

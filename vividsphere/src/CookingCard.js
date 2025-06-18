@@ -2,38 +2,43 @@ import React, { useEffect, useState } from "react";
 
 /**
  * CookingCard
- * Card for Cooking Recipes – integrates Spoonacular API.
+ * Card for Cooking Recipes – reworked for easy, beginner-friendly cookie recipes using Spoonacular API search + client filtering.
  * previewMode (grid card) or full interactive display.
  */
 // PUBLIC_INTERFACE
 function CookingCard({ previewMode, onClick, onBack }) {
-  // This API key is for demo/personal use only. In production, use env variable or backend proxy.
+  // API configuration
   const API_KEY = "472624e314c44c30b8be3d737a51807f";
-  // Multi-step fallback URLs to maximize chance of finding Indian/South Indian results
-  const API_URLS = [
-    // 1. Most filtered: Indian cuisine, "South Indian,Tamil" tags
-    `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&tags=South+Indian,Tamil&apiKey=${API_KEY}`,
-    // 2. South Indian only (no "Tamil" tag, for broader results)
-    `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&tags=South+Indian&apiKey=${API_KEY}`,
-    // 3. Just Indian cuisine, no tags
-    `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&apiKey=${API_KEY}`,
-    // 4. Broad: random recipes, let client filter
-    `https://api.spoonacular.com/recipes/random?number=18&apiKey=${API_KEY}`
-  ];
+  // Spoonacular "complexSearch" for 'cookie', query for 'easy cookies' and filter for simple instructions.
+  const SEARCH_URL =
+    `https://api.spoonacular.com/recipes/complexSearch` +
+    `?apiKey=${API_KEY}` +
+    `&query=easy%20cookie` +
+    `&number=18` +
+    `&instructionsRequired=true` +
+    `&maxReadyTime=40` +
+    `&addRecipeInformation=true` + // get instructions, ingredients
+    `&sort=min-missing-ingredients`;
 
-  // If all fail or responses are empty, fallback to hardcoded recipe(s) or local tips
-  const POPULAR_FALLBACK_RECIPES = [
+  // If all else fails, fallback to demo cookie recipes
+  const POPULAR_FALLBACK_COOKIE_RECIPES = [
     {
-      id: "demo-1",
-      title: "Masala Dosa",
-      image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/07/masala-dosa-recipe.jpg",
-      spoonacularSourceUrl: "https://www.indianhealthyrecipes.com/masala-dosa-recipe/"
+      id: "cookie-demo-demo1",
+      title: "Soft Butter Cookies (Beginner)",
+      image: "https://www.allrecipes.com/thmb/bXH9D1dKxYwY8zIDL7r_U09iF8c=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/9870-butter-cookies-DDMFS-4x3-35746e6420844da798a417431a67482d.jpg",
+      spoonacularSourceUrl: "https://www.allrecipes.com/recipe/9870/butter-cookies/"
     },
     {
-      id: "demo-2",
-      title: "Curd Rice",
-      image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2017/10/curd-rice-thayir-sadam.jpg",
-      spoonacularSourceUrl: "https://www.indianhealthyrecipes.com/curd-rice-recipe/"
+      id: "cookie-demo-demo2",
+      title: "Simple No-Oven Biscuit Cookies",
+      image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2018/11/biscuit-cake-recipe.jpg",
+      spoonacularSourceUrl: "https://www.indianhealthyrecipes.com/biscuit-cake-recipe/"
+    },
+    {
+      id: "cookie-demo-demo3",
+      title: "Eggless Nankhatai (Indian Shortbread Cookies)",
+      image: "https://www.vegrecipesofindia.com/wp-content/uploads/2021/08/nankhatai-recipe-1a.jpg",
+      spoonacularSourceUrl: "https://www.vegrecipesofindia.com/nankhatai-recipe-eggless-nankhatai/"
     }
   ];
 
@@ -41,57 +46,73 @@ function CookingCard({ previewMode, onClick, onBack }) {
   const [loading, setLoading] = useState(!previewMode);
   const [error, setError] = useState(null);
 
-  // Robust fetch with fallbacks (will try API URLs in order, fallback to local sample if all fail/no recipes)
+  // Fetch easy cookie recipes from Spoonacular + filter for true beginner level
   useEffect(() => {
     let isMounted = true;
     if (!previewMode) {
       setLoading(true);
       setError(null);
 
-      // Recursive async fetch across API_URLS, fallback to POPULAR_FALLBACK_RECIPES if needed
-      const tryFetchRecipes = async (urls, idx = 0) => {
-        if (idx >= urls.length) {
-          // All failed or gave empty, show fallback
-          if (isMounted) {
-            setRecipes(POPULAR_FALLBACK_RECIPES);
-            setError(
-              "Unable to fetch recipes from Spoonacular (quota reached or filter too narrow). Showing demo recipes."
-            );
-            setLoading(false);
-          }
-          return;
-        }
+      // Main fetch from Spoonacular complexSearch endpoint
+      const fetchEasyCookies = async () => {
         try {
-          const resp = await fetch(urls[idx]);
-          if (!resp.ok) throw new Error("Failed to fetch recipes");
+          const resp = await fetch(SEARCH_URL);
+          if (!resp.ok) throw new Error("Failed to fetch cookie recipes");
           const data = await resp.json();
-          if (Array.isArray(data.recipes) && data.recipes.length > 0) {
-            if (isMounted) {
-              setRecipes(data.recipes);
-              setLoading(false);
-              // no error message, success!
+
+          let fetched = Array.isArray(data.results) ? data.results : [];
+
+          // Client-side filtering for super-easy/beginner cookies
+          // "Beginner" heuristics: title contains 'easy'/'simple', <8 ingredients, <=6 steps, basic instructions, or key tags.
+          const filtered = fetched.filter((rec) => {
+            const title = (rec.title || "").toLowerCase();
+            // ingredient count: try extendedIngredients.length, fallback to 0
+            const ingCount = rec.extendedIngredients
+              ? rec.extendedIngredients.length
+              : (rec.ingredients ? rec.ingredients.length : 0);
+
+            // Get analyzed instructions (array of steps), fallback to empty
+            let stepsArr = [];
+            if (rec.analyzedInstructions && rec.analyzedInstructions.length > 0) {
+              stepsArr = rec.analyzedInstructions[0].steps || [];
+            } else if (rec.instructions) {
+              stepsArr = rec.instructions.split(".").filter(e => e.trim().length > 8);
             }
-            return;
-          } else {
-            // Empty: try next fallback filter
-            return tryFetchRecipes(urls, idx + 1);
+
+            const easyInTitle = /\beasy\b|\bbeginner\b|\bsimple\b|\bquick\b/i.test(title);
+            const ingredientIsSimple = ingCount > 0 && ingCount <= 8;
+            const stepsAreShort = stepsArr && stepsArr.length > 0 && stepsArr.length <= 6;
+            // Accept if any two conditions met (or name is "no bake")
+            const isNoBake = /\bno\s*bake\b/.test(title);
+
+            return (
+              ((easyInTitle || ingredientIsSimple || stepsAreShort || isNoBake) &&
+               (title.includes("cookie") || title.includes("biscuit"))) // Only cookies
+            );
+          });
+
+          if (isMounted) {
+            if (filtered.length > 0) {
+              setRecipes(filtered);
+              setLoading(false);
+            } else {
+              // No good recipes found, fallback to hardcoded
+              setRecipes(POPULAR_FALLBACK_COOKIE_RECIPES);
+              setError("Could not find simple cookie recipes. Showing demo suggestions.");
+              setLoading(false);
+            }
           }
         } catch (e) {
-          // Hard error, try next or fallback
-          if (idx + 1 < urls.length) {
-            return tryFetchRecipes(urls, idx + 1);
-          } else {
-            if (isMounted) {
-              setRecipes(POPULAR_FALLBACK_RECIPES);
-              setError(
-                "Could not fetch live recipes from Spoonacular. Showing demo suggestions."
-              );
-              setLoading(false);
-            }
+          // On error fallback to fallback cookie recipes
+          if (isMounted) {
+            setRecipes(POPULAR_FALLBACK_COOKIE_RECIPES);
+            setError("Could not fetch live cookie recipes. Showing demo beginner recipes.");
+            setLoading(false);
           }
         }
       };
-      tryFetchRecipes(API_URLS);
+
+      fetchEasyCookies();
 
       // Cleanup to prevent state updates if unmount
       return () => { isMounted = false; };
@@ -99,7 +120,7 @@ function CookingCard({ previewMode, onClick, onBack }) {
     // eslint-disable-next-line
   }, [previewMode]);
 
-  // Preview
+  // Preview card
   if (previewMode) {
     return (
       <div
@@ -107,32 +128,34 @@ function CookingCard({ previewMode, onClick, onBack }) {
         style={cardStyle("cooking")}
         onClick={onClick}
         tabIndex={0}
-        aria-label="Cooking Recipes card"
+        aria-label="Easy Cookie Recipes card"
         role="button"
         onKeyPress={e => (e.key === "Enter" ? onClick() : undefined)}
       >
-        <span style={iconStyle("cooking")}>🍳</span>
-        <div style={{ fontWeight: 700, fontSize: "1.17rem" }}>Cooking Recipes</div>
-        <div style={descStyle}>South Indian &amp; Tamil recipe inspiration!<br />Powered by Spoonacular.</div>
+        <span style={iconStyle("cooking")}>🍪</span>
+        <div style={{ fontWeight: 700, fontSize: "1.17rem" }}>Easy Cookie Recipes</div>
+        <div style={descStyle}>Beginner-friendly cookies &amp; biscuits for all!<br />Powered by Spoonacular.</div>
       </div>
     );
   }
 
-  // Expanded
+  // Expanded view: Easy Cookie Recipes for Beginners
   return (
     <section className="vs-section cooking" style={sectionStyle}>
-      <SectionHeader icon="🍳" color="var(--vs-cooking)">Indian &amp; Tamil Cooking Recipes</SectionHeader>
+      <SectionHeader icon="🍪" color="var(--vs-cooking)">
+        Easy Cookie Recipes for Beginners
+      </SectionHeader>
       <div style={descStyle}>
-        Curated selection of Indian, Tamil, and South Indian dishes.<br />
+        Simple, beginner-friendly cookies &amp; biscuits from Spoonacular, hand-filtered for minimal ingredients and basic steps.<br />
         Recipes sourced via <a href="https://spoonacular.com/food-api" style={{ color: "var(--vs-cooking)" }} target="_blank" rel="noreferrer">Spoonacular</a>.
       </div>
       {onBack && <button className="btn" style={backBtnStyle} onClick={onBack}>Back to Categories</button>}
-      {loading && <div style={{ color: "var(--vs-cooking)" }}>Loading recipes…</div>}
+      {loading && <div style={{ color: "var(--vs-cooking)" }}>Loading cookie recipes…</div>}
       {error && <div style={{ color: "#d14343" }}>Error: {error}</div>}
       {!loading && !error && (
         <div className="vs-row" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px,1fr))", gap: 18, marginTop: 18 }}>
           {recipes.length === 0
-            ? <div>No recipes found.</div>
+            ? <div>No cookie recipes found.</div>
             : recipes.map(recipe => (
               <div key={recipe.id}
                 style={{
@@ -140,7 +163,7 @@ function CookingCard({ previewMode, onClick, onBack }) {
                   borderRadius: 10,
                   padding: 10,
                   border: "1px solid var(--vs-cardborder)",
-                  display: "flex", flexDirection: "column", alignItems: "center", minHeight: 225
+                  display: "flex", flexDirection: "column", alignItems: "center", minHeight: 235
                 }}
               >
                 {recipe.image
@@ -150,7 +173,7 @@ function CookingCard({ previewMode, onClick, onBack }) {
                     }} />
                   : <div style={{ height: 118, width: "100%", background: "#222", marginBottom: 7, borderRadius: 8 }}></div>}
                 <div style={{ fontWeight: 600, fontSize: "1.04rem", color: "var(--vs-accent)", textAlign: "center" }}>{recipe.title}</div>
-                <a href={recipe.spoonacularSourceUrl} target="_blank" rel="noreferrer"
+                <a href={recipe.spoonacularSourceUrl || recipe.sourceUrl} target="_blank" rel="noreferrer"
                   className="btn" style={btnStyle("cooking")}>Recipe</a>
               </div>
             ))}
