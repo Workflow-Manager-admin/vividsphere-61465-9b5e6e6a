@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import DrawingIllustrations from './DrawingIllustrations';
+import Movies from './Movies';
 
 // PUBLIC_INTERFACE
 function App() {
@@ -34,6 +35,9 @@ function App() {
               {showIllustrations ? "Hide Drawing Illustrations" : "Show Drawing Illustrations"}
             </button>
           </div>
+          {/* Inject Movies Section */}
+          <Movies />
+
           {/* Inject Drawing Illustrations Explorer */}
           {showIllustrations && (
             <DrawingIllustrations />
