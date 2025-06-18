@@ -7,13 +7,13 @@
 <i> [webpack-dev-server] On Your Network (IPv4): http://172.17.0.2:3000/
 <i> [webpack-dev-server] Content not from webpack is served from './public' directory
 Injecting EditorRootWrapper import: ../.ve/EditorRootWrapper
-asset bundle.js 1.41 MiB [emitted] (name: main)
+asset bundle.js 1.45 MiB [emitted] (name: main)
 asset index.html 1.98 KiB [emitted]
 runtime modules 27.5 KiB 14 modules
 modules by path ./node_modules/ 1.24 MiB 31 modules
-modules by path ./src/ 26.2 KiB
-  modules by path ./src/*.js 18.7 KiB 5 modules
-  modules by path ./src/*.css 7.49 KiB
+modules by path ./src/ 52.9 KiB
+  modules by path ./src/*.js 45 KiB 7 modules
+  modules by path ./src/*.css 7.89 KiB
     ./src/index.css 2.23 KiB [built] [code generated]
     + 3 modules
 modules by path ./.ve/ 15.1 KiB
@@ -22,203 +22,24 @@ modules by path ./.ve/ 15.1 KiB
     ./.ve/EditorOverlay.css 2.25 KiB [built] [code generated]
     ./node_modules/css-loader/dist/cjs.js!./.ve/EditorOverlay.css 697 bytes [built] [code generated]
   ./.ve/EditorOverlay.jsx 1.58 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 1292 ms
-assets by status 1.98 KiB [cached] 1 asset
-assets by path *.js 1.41 MiB
-  asset bundle.js 1.4 MiB [emitted] (name: main)
-  asset main.059aab40a3c29cc0ee5c.hot-update.js 13 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.059aab40a3c29cc0ee5c.hot-update.json 98 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.41 MiB = bundle.js 1.4 MiB main.059aab40a3c29cc0ee5c.hot-update.js 13 KiB
-cached modules 1.26 MiB [cached] 41 modules
-runtime modules 27.5 KiB 14 modules
-./src/App.js 7.16 KiB [built] [code generated]
-
-ERROR in ./src/App.js 5:0-38
-Module not found: Error: Can't resolve './MoviesCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 6:0-40
-Module not found: Error: Can't resolve './CookingCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 7:0-40
-Module not found: Error: Can't resolve './DrawingCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 8:0-44
-Module not found: Error: Can't resolve './FunVideosCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 9:0-44
-Module not found: Error: Can't resolve './HouseholdCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-5 errors have detailed information that is not shown.
-Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
-
-webpack 5.99.9 compiled with 5 errors in 106 ms
-assets by status 1.98 KiB [cached] 1 asset
-assets by path *.js 1.43 MiB
-  asset bundle.js 1.41 MiB [emitted] (name: main)
-  asset main.3b29c5a7626d831dd7bd.hot-update.js 23.7 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.3b29c5a7626d831dd7bd.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.43 MiB = bundle.js 1.41 MiB main.3b29c5a7626d831dd7bd.hot-update.js 23.7 KiB
-cached modules 1.26 MiB [cached] 41 modules
-runtime modules 27.5 KiB 14 modules
-javascript modules 15.3 KiB
-  ./src/App.js 7.16 KiB [code generated]
-  ./src/MoviesCard.js 8.13 KiB [built] [code generated]
-
-ERROR in ./src/App.js 6:0-40
-Module not found: Error: Can't resolve './CookingCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 7:0-40
-Module not found: Error: Can't resolve './DrawingCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 8:0-44
-Module not found: Error: Can't resolve './FunVideosCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 9:0-44
-Module not found: Error: Can't resolve './HouseholdCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-4 errors have detailed information that is not shown.
-Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
-
-webpack 5.99.9 compiled with 4 errors in 102 ms
-assets by status 1.98 KiB [cached] 1 asset
-assets by path *.js 1.44 MiB
-  asset bundle.js 1.42 MiB [emitted] (name: main)
-  asset main.42c9f0e2e40d8baee802.hot-update.js 22.8 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.42c9f0e2e40d8baee802.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.44 MiB = bundle.js 1.42 MiB main.42c9f0e2e40d8baee802.hot-update.js 22.8 KiB
-cached modules 1.27 MiB [cached] 42 modules
-runtime modules 27.5 KiB 14 modules
-javascript modules 14.7 KiB
-  ./src/App.js 7.16 KiB [code generated]
-  ./src/CookingCard.js 7.53 KiB [built] [code generated]
-
-ERROR in ./src/App.js 7:0-40
-Module not found: Error: Can't resolve './DrawingCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 8:0-44
-Module not found: Error: Can't resolve './FunVideosCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 9:0-44
-Module not found: Error: Can't resolve './HouseholdCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
- @ ./src/index.js 5:0-24 11:32-35
-
-3 errors have detailed information that is not shown.
-Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
-
-webpack 5.99.9 compiled with 3 errors in 69 ms
-assets by status 1.98 KiB [cached] 1 asset
-assets by path *.js 1.45 MiB
-  asset bundle.js 1.43 MiB [emitted] (name: main)
-  asset main.eb1c3ffb998446db1f7f.hot-update.js 22.2 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.eb1c3ffb998446db1f7f.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.45 MiB = bundle.js 1.43 MiB main.eb1c3ffb998446db1f7f.hot-update.js 22.2 KiB
-cached modules 1.28 MiB [cached] 43 modules
-runtime modules 27.5 KiB 14 modules
-javascript modules 14.3 KiB
-  ./src/App.js 7.16 KiB [code generated]
-  ./src/DrawingCard.js 7.18 KiB [built] [code generated]
-
-ERROR in ./src/App.js 8:0-44
-Module not found: Error: Can't resolve './FunVideosCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
-resolve './FunVideosCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
-  using description file: /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/package.json (relative path: ./src)
-    Field 'browser' doesn't contain a valid alias configuration
-    using description file: /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/package.json (relative path: ./src/FunVideosCard)
-      no extension
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/FunVideosCard doesn't exist
-      .js
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/FunVideosCard.js doesn't exist
-      .jsx
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/FunVideosCard.jsx doesn't exist
-      as directory
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/FunVideosCard doesn't exist
- @ ./src/index.js 5:0-24 11:32-35
-
-ERROR in ./src/App.js 9:0-44
-Module not found: Error: Can't resolve './HouseholdCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
-resolve './HouseholdCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
-  using description file: /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/package.json (relative path: ./src)
-    Field 'browser' doesn't contain a valid alias configuration
-    using description file: /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/package.json (relative path: ./src/HouseholdCard)
-      no extension
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard doesn't exist
-      .js
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard.js doesn't exist
-      .jsx
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard.jsx doesn't exist
-      as directory
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard doesn't exist
- @ ./src/index.js 5:0-24 11:32-35
-
-webpack 5.99.9 compiled with 2 errors in 64 ms
+webpack 5.99.9 compiled successfully in 1418 ms
 assets by status 1.98 KiB [cached] 1 asset
 assets by path *.js 1.46 MiB
-  asset bundle.js 1.44 MiB [emitted] (name: main)
-  asset main.201cf8314e9ce3265228.hot-update.js 23 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.201cf8314e9ce3265228.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.46 MiB = bundle.js 1.44 MiB main.201cf8314e9ce3265228.hot-update.js 23 KiB
-cached modules 1.28 MiB [cached] 44 modules
-runtime modules 27.5 KiB 14 modules
-javascript modules 15.2 KiB
-  ./src/App.js 7.16 KiB [code generated]
-  ./src/FunVideosCard.js 8.04 KiB [built] [code generated]
-
-ERROR in ./src/App.js 9:0-44
-Module not found: Error: Can't resolve './HouseholdCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
-resolve './HouseholdCard' in '/home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src'
-  using description file: /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/package.json (relative path: ./src)
-    Field 'browser' doesn't contain a valid alias configuration
-    using description file: /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/package.json (relative path: ./src/HouseholdCard)
-      no extension
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard doesn't exist
-      .js
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard.js doesn't exist
-      .jsx
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard.jsx doesn't exist
-      as directory
-        /home/kavia/workspace/code-generation/vividsphere-61465-9b5e6e6a/vividsphere/src/HouseholdCard doesn't exist
- @ ./src/index.js 5:0-24 11:32-35
-
-webpack 5.99.9 compiled with 1 error in 69 ms
-assets by status 1.98 KiB [cached] 1 asset
-assets by path *.js 1.47 MiB
   asset bundle.js 1.45 MiB [emitted] (name: main)
-  asset main.8b860518d85e9899a770.hot-update.js 20.7 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.8b860518d85e9899a770.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.47 MiB = bundle.js 1.45 MiB main.8b860518d85e9899a770.hot-update.js 20.7 KiB
-cached modules 1.29 MiB [cached] 45 modules
-runtime modules 27.5 KiB 14 modules
-javascript modules 13.6 KiB
-  ./src/App.js 7.16 KiB [code generated]
-  ./src/HouseholdCard.js 6.42 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 64 ms
-assets by status 1.98 KiB [cached] 1 asset
-assets by path *.js 1.45 MiB
-  asset bundle.js 1.45 MiB [emitted] (name: main)
-  asset main.5c742bcda3e2b1215918.hot-update.js 5.06 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.5c742bcda3e2b1215918.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.45 MiB = bundle.js 1.45 MiB main.5c742bcda3e2b1215918.hot-update.js 5.06 KiB
+  asset main.20b2ca92f3c5dbe6e9da.hot-update.js 12.9 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.20b2ca92f3c5dbe6e9da.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 1.46 MiB = bundle.js 1.45 MiB main.20b2ca92f3c5dbe6e9da.hot-update.js 12.9 KiB
 cached modules 1.3 MiB [cached] 46 modules
 runtime modules 27.5 KiB 14 modules
-./node_modules/css-loader/dist/cjs.js!./src/App.css 2.59 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 45 ms
+./src/MoviesCard.js 9.26 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 148 ms
+assets by status 1.98 KiB [cached] 1 asset
+assets by path *.js 1.46 MiB
+  asset bundle.js 1.45 MiB [emitted] (name: main)
+  asset main.902ff31611d793e7e63a.hot-update.js 13.4 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.902ff31611d793e7e63a.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 1.46 MiB = bundle.js 1.45 MiB main.902ff31611d793e7e63a.hot-update.js 13.4 KiB
+cached modules 1.3 MiB [cached] 46 modules
+runtime modules 27.5 KiB 14 modules
+./src/MoviesCard.js 9.64 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 96 ms

@@ -8,29 +8,52 @@ import React, { useEffect, useState } from "react";
 // PUBLIC_INTERFACE
 function MoviesCard({ previewMode, onClick, onBack }) {
   const API_KEY = "5bc67d3b06aecbd18121a3cbbc16eb59";
-  const API_URL =
-    `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-
+  // Use 'language=ta' for Tamil, and region IN. Include both parameters, fetch more results.
+  // Show a mix of trending/discover for better Tamil coverage.
+  const TAMIL_DISCOVER_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=ta&region=IN&with_original_language=ta&sort_by=popularity.desc&page=1`;
+  const TAMIL_TRENDING_URL = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=ta&region=IN`;
+  
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(!previewMode); // Don't auto-load in preview
   const [error, setError] = useState(null);
 
-  // Begin fetching only in expanded/full mode
+  // Fetch Tamil movies from both endpoints and dedupe.
   useEffect(() => {
     if (!previewMode) {
       setLoading(true);
       setError(null);
-      fetch(API_URL)
-        .then(r => {
-          if (!r.ok) throw new Error("Failed to fetch movies");
-          return r.json();
-        })
-        .then(data => {
-          setMovies(data.results || []);
+      Promise.all([
+        fetch(TAMIL_DISCOVER_URL)
+          .then(r => {
+            if (!r.ok) throw new Error("TMDb discover failed");
+            return r.json();
+          })
+          .then(data => Array.isArray(data.results) ? data.results : [])
+          .catch(() => []),
+        fetch(TAMIL_TRENDING_URL)
+          .then(r => {
+            if (!r.ok) throw new Error("TMDb trending failed");
+            return r.json();
+          })
+          .then(data => Array.isArray(data.results) ? data.results : [])
+          .catch(() => [])
+      ])
+        .then(([discoverResults, trendingResults]) => {
+          // Deduplicate by movie ID, prefer trending first
+          const combined = [...(trendingResults || []), ...(discoverResults || [])];
+          const seen = new Set();
+          const moviesDeduped = [];
+          for (const movie of combined) {
+            if (movie && movie.id && !seen.has(movie.id)) {
+              seen.add(movie.id);
+              moviesDeduped.push(movie);
+            }
+          }
+          setMovies(moviesDeduped);
           setLoading(false);
         })
         .catch(e => {
-          setError(e.message);
+          setError(e.message || "Failed to fetch Tamil movies");
           setLoading(false);
         });
     }
@@ -45,13 +68,13 @@ function MoviesCard({ previewMode, onClick, onBack }) {
         style={cardStyle("movies")}
         onClick={onClick}
         tabIndex={0}
-        aria-label="Popular Movies card"
+        aria-label="Tamil Movies card"
         role="button"
         onKeyPress={e => (e.key === "Enter" ? onClick() : undefined)}
       >
         <span style={iconStyle("movies")}>🎬</span>
-        <div style={{ fontWeight: 700, fontSize: "1.17rem" }}>Popular Movies</div>
-        <div style={descStyle}>See what's trending in cinemas right now.<br />Powered by TMDb.</div>
+        <div style={{ fontWeight: 700, fontSize: "1.17rem" }}>Tamil Movies</div>
+        <div style={descStyle}>Popular and trending movies in Tamil.<br />Powered by TMDb.</div>
       </div>
     );
   }
@@ -59,8 +82,8 @@ function MoviesCard({ previewMode, onClick, onBack }) {
   // Expanded rendering
   return (
     <section className="vs-section movies" style={sectionStyle}>
-      <SectionHeader icon="🎬" color="var(--vs-movie)">Popular Movies</SectionHeader>
-      <div style={descStyle}>Movies from <a href="https://themoviedb.org/" target="_blank" rel="noreferrer" style={{ color: "var(--vs-movie)" }}>TMDb</a></div>
+      <SectionHeader icon="🎬" color="var(--vs-movie)">Tamil Movies</SectionHeader>
+      <div style={descStyle}>Movies in <b>Tamil language</b> (<span lang="ta" style={{fontFamily:"sans-serif"}}>தமிழ்</span>) from <a href="https://themoviedb.org/" target="_blank" rel="noreferrer" style={{ color: "var(--vs-movie)" }}>TMDb</a>, filtered for Indian region.</div>
       {onBack && <button className="btn" style={backBtnStyle} onClick={onBack}>Back to Categories</button>}
       {loading && <div style={{ color: "var(--vs-movie)" }}>Loading movies…</div>}
       {error && <div style={{ color: "#d14343" }}>Error: {error}</div>}
@@ -68,7 +91,7 @@ function MoviesCard({ previewMode, onClick, onBack }) {
         <div className="vs-row" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px,1fr))", gap: 18, marginTop: 18 }}>
           {movies.length === 0
             ? <div>No movies found.</div>
-            : movies.slice(0, 12).map(movie => (
+            : movies.slice(0, 18).map(movie => (
               <div key={movie.id}
                 style={{
                   background: "rgba(17,20,40,0.81)",
