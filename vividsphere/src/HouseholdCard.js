@@ -86,39 +86,46 @@ function HouseholdCard({ previewMode, onClick, onBack }) {
       {onBack && <button className="btn" style={backBtnStyle} onClick={onBack}>Back to Categories</button>}
       <div className="vs-row" style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(250px,1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(270px,1fr))",
         gap: 22,
-        marginTop: 18
+        marginTop: 18,
+        width: "100%",
+        paddingBottom: 5,
       }}>
         {curatedTips.map((item, idx) => (
-          <div
+          <section
             key={idx}
+            aria-label={item.title}
             style={{
-              background: "rgba(16,17,27,0.92)",
-              borderRadius: 11,
-              padding: 14,
+              background: idx % 2 === 0
+                ? "linear-gradient(120deg, rgba(16,17,27,0.97) 74%, rgba(12,166,70,0.11))"
+                : "linear-gradient(120deg, rgba(20,21,33,0.88) 64%, rgba(232,122,65,0.08))",
+              borderRadius: 12,
+              padding: "18px 14px 17px 14px",
               border: "2px solid var(--vs-household)",
               display: "flex",
               flexDirection: "column",
               alignItems: "stretch",
               textAlign: "left",
-              minHeight: 170,
+              minHeight: 190,
               position: "relative",
-              boxShadow: "0 4px 14px rgba(0,0,0,0.13)"
+              boxShadow: "0 4px 15px rgba(0,0,0,0.13)",
+              marginBottom: 2
             }}
           >
-            <div style={{
+            <header style={{
               fontWeight: 700,
               color: "var(--vs-accent)",
-              fontSize: "1.11rem",
-              marginBottom: 6,
+              fontSize: "1.17rem",
+              marginBottom: 7,
               display: "flex",
               alignItems: "center",
-              gap: 7
+              gap: 8,
+              lineHeight: 1.17
             }}>
-              <span style={{ fontSize: 24 }}>{item.icon}</span>
-              {item.title}
-            </div>
+              <span style={{ fontSize: 26 }}>{item.icon}</span>
+              <span style={{ flex: 1, wordBreak: "break-word" }}>{item.title}</span>
+            </header>
             {item.image &&
               <img
                 src={item.image}
@@ -126,26 +133,36 @@ function HouseholdCard({ previewMode, onClick, onBack }) {
                 loading="lazy"
                 style={{
                   width: "100%",
-                  height: 90,
+                  height: 98,
                   objectFit: "cover",
                   borderRadius: 7,
                   marginBottom: 8,
-                  background: "#232426"
+                  background: "#232426",
+                  boxShadow: "0 2px 7px rgba(12,166,70,0.04)"
                 }}
               />
             }
             <ul style={{
               color: "var(--vs-carddarker)",
-              fontSize: "0.98rem",
+              fontSize: "1.018rem",
               margin: 0,
-              paddingLeft: 18,
-              listStyle: "square"
+              marginTop: 3,
+              marginBottom: 3,
+              paddingLeft: 19,
+              listStyle: "square",
+              lineHeight: 1.42,
             }}>
               {item.points.map((pt, i) => (
-                <li key={i} style={{ marginBottom: 4 }}>{pt}</li>
+                <li key={i} style={{
+                  marginBottom: 5,
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-line",
+                  letterSpacing: "0.01em",
+                  fontSize: idx % 2 === 0 ? "1.013em" : "0.985em"
+                }}>{pt}</li>
               ))}
             </ul>
-          </div>
+          </section>
         ))}
       </div>
       <div style={{

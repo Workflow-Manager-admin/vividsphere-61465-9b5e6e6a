@@ -9,32 +9,92 @@ import React, { useEffect, useState } from "react";
 function CookingCard({ previewMode, onClick, onBack }) {
   // This API key is for demo/personal use only. In production, use env variable or backend proxy.
   const API_KEY = "472624e314c44c30b8be3d737a51807f";
-  // Fetch more recipes and filter for South Indian (focus on Indian, Tamil, South Indian cuisine)
-  // We use cuisines/Tamil/South+Indian in tags/keywords as Spoonacular does not have a "Tamil" cuisine, so we try combinations.
-  // This endpoint pulls random recipes, but lets us filter by cuisine and tags/keywords for best result
-  const API_URL = `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&tags=South+Indian,Tamil&apiKey=${API_KEY}`;
+  // Multi-step fallback URLs to maximize chance of finding Indian/South Indian results
+  const API_URLS = [
+    // 1. Most filtered: Indian cuisine, "South Indian,Tamil" tags
+    `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&tags=South+Indian,Tamil&apiKey=${API_KEY}`,
+    // 2. South Indian only (no "Tamil" tag, for broader results)
+    `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&tags=South+Indian&apiKey=${API_KEY}`,
+    // 3. Just Indian cuisine, no tags
+    `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&apiKey=${API_KEY}`,
+    // 4. Broad: random recipes, let client filter
+    `https://api.spoonacular.com/recipes/random?number=18&apiKey=${API_KEY}`
+  ];
+
+  // If all fail or responses are empty, fallback to hardcoded recipe(s) or local tips
+  const POPULAR_FALLBACK_RECIPES = [
+    {
+      id: "demo-1",
+      title: "Masala Dosa",
+      image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/07/masala-dosa-recipe.jpg",
+      spoonacularSourceUrl: "https://www.indianhealthyrecipes.com/masala-dosa-recipe/"
+    },
+    {
+      id: "demo-2",
+      title: "Curd Rice",
+      image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2017/10/curd-rice-thayir-sadam.jpg",
+      spoonacularSourceUrl: "https://www.indianhealthyrecipes.com/curd-rice-recipe/"
+    }
+  ];
 
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(!previewMode);
   const [error, setError] = useState(null);
 
+  // Robust fetch with fallbacks (will try API URLs in order, fallback to local sample if all fail/no recipes)
   useEffect(() => {
+    let isMounted = true;
     if (!previewMode) {
       setLoading(true);
       setError(null);
-      fetch(API_URL)
-        .then((r) => {
-          if (!r.ok) throw new Error("Failed to fetch recipes");
-          return r.json();
-        })
-        .then((data) => {
-          setRecipes(data.recipes || []);
-          setLoading(false);
-        })
-        .catch((e) => {
-          setError(e.message);
-          setLoading(false);
-        });
+
+      // Recursive async fetch across API_URLS, fallback to POPULAR_FALLBACK_RECIPES if needed
+      const tryFetchRecipes = async (urls, idx = 0) => {
+        if (idx >= urls.length) {
+          // All failed or gave empty, show fallback
+          if (isMounted) {
+            setRecipes(POPULAR_FALLBACK_RECIPES);
+            setError(
+              "Unable to fetch recipes from Spoonacular (quota reached or filter too narrow). Showing demo recipes."
+            );
+            setLoading(false);
+          }
+          return;
+        }
+        try {
+          const resp = await fetch(urls[idx]);
+          if (!resp.ok) throw new Error("Failed to fetch recipes");
+          const data = await resp.json();
+          if (Array.isArray(data.recipes) && data.recipes.length > 0) {
+            if (isMounted) {
+              setRecipes(data.recipes);
+              setLoading(false);
+              // no error message, success!
+            }
+            return;
+          } else {
+            // Empty: try next fallback filter
+            return tryFetchRecipes(urls, idx + 1);
+          }
+        } catch (e) {
+          // Hard error, try next or fallback
+          if (idx + 1 < urls.length) {
+            return tryFetchRecipes(urls, idx + 1);
+          } else {
+            if (isMounted) {
+              setRecipes(POPULAR_FALLBACK_RECIPES);
+              setError(
+                "Could not fetch live recipes from Spoonacular. Showing demo suggestions."
+              );
+              setLoading(false);
+            }
+          }
+        }
+      };
+      tryFetchRecipes(API_URLS);
+
+      // Cleanup to prevent state updates if unmount
+      return () => { isMounted = false; };
     }
     // eslint-disable-next-line
   }, [previewMode]);
