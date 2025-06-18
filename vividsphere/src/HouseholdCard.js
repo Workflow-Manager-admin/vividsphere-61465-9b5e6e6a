@@ -7,26 +7,51 @@ import React from "react";
  */
 // PUBLIC_INTERFACE
 function HouseholdCard({ previewMode, onClick, onBack }) {
-  const sampleTutorials = [
+  // Curated sample content relevant for Indian families
+  const curatedTips = [
     {
-      title: "How to Fix a Leaky Faucet",
-      desc: "Step-by-step basics to diagnose and fix most common kitchen and bathroom faucet leaks.",
-      video: "https://www.youtube.com/watch?v=9pugY0nkaJk"
+      title: "Top Kitchen Hacks",
+      icon: "🍲",
+      points: [
+        "Use leftover rice to make tasty lemon rice or curd rice.",
+        "To keep dosa batter fresh longer, add a pinch of sugar before mixing.",
+        "Remove turmeric stains from containers by sun-drying or with lemon juice.",
+        "For soft chapatis, knead dough with warm milk or water and let it rest."
+      ],
+      image: "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/sneha-archanaskitchen.com/Ak_South_Indian_Plate_Thali-6.jpg"
     },
     {
-      title: "DIY: Organize Your Closet",
-      desc: "Simple, smart tips to declutter and neatly organize your wardrobe for any season.",
-      video: "https://www.youtube.com/watch?v=5DlFSy9RipQ"
+      title: "Cleaning Made Easy",
+      icon: "🧽",
+      points: [
+        "Soak pressure cooker lids/gaskets in hot water with dish soap to remove oily residue.",
+        "Shine brass utensils with a paste of tamarind and salt.",
+        "Use vinegar and baking soda to unclog kitchen and bathroom drains.",
+        "Switch to microfiber cloths to dust puja areas or screens without residue."
+      ],
+      image: "https://images.herzindagi.info/image/2022/Apr/cleaning-tips-indian-household.jpg"
     },
     {
-      title: "Wall Patching Basics",
-      desc: "Learn how to repair holes and dings in drywall for a fresh, clean look.",
-      video: "https://www.youtube.com/watch?v=13m0g7ALGJ8"
+      title: "Home Organization Quick Wins",
+      icon: "📦",
+      points: [
+        "Save old sarees or dupattas as dust covers for suitcases or shelves.",
+        "Use dabba (container) stacking and labelling to streamline kitchen essentials.",
+        "Assign baskets in the living room for fast toy or magazine cleanup.",
+        "Hang keys on pegs near the entrance to avoid frantic searching."
+      ],
+      image: "https://www.godrejinterio.com/blogimages/StorageHacks.jpg"
     },
     {
-      title: "Unclog a Drain",
-      desc: "Quick methods to safely clear most sink and tub clogs—no plumber required.",
-      video: "https://www.youtube.com/watch?v=XbW_Ds9V6RM"
+      title: "Smart Daily Time-Savers",
+      icon: "⏰",
+      points: [
+        "Plan weekly meals and prep masalas/chutneys in bulk for faster cooking.",
+        "Designate a 'ready area' for school bags, IDs, and uniforms to avoid morning chaos.",
+        "Use old newspapers to line kitchen shelves for easy cleanup.",
+        "Keep a small 'essentials box' (band-aid, pins, candles) for household emergencies."
+      ],
+      image: "https://i.pinimg.com/736x/51/bd/7d/51bd7dcb4dfedc804e3fa50fae3606e2.jpg"
     }
   ];
 
@@ -49,51 +74,90 @@ function HouseholdCard({ previewMode, onClick, onBack }) {
     );
   }
 
-  // Expanded: shows static sample list
+  // Expanded: show curated Indian household tips, each as a card with list + image
   return (
     <section className="vs-section household" style={sectionStyle}>
-      <SectionHeader icon="🏠" color="var(--vs-household)">Household Tutorials</SectionHeader>
-      <div style={descStyle}>Explore quick and easy guides for home improvement and maintenance!</div>
+      <SectionHeader icon="🏠" color="var(--vs-household)">
+        Indian Household Tips &amp; Tutorials
+      </SectionHeader>
+      <div style={descStyle}>
+        Curated kitchen hacks, cleaning guides, and practical time-saving tips for Indian homes!
+      </div>
       {onBack && <button className="btn" style={backBtnStyle} onClick={onBack}>Back to Categories</button>}
       <div className="vs-row" style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(210px,1fr))",
-        gap: 18,
+        gridTemplateColumns: "repeat(auto-fit, minmax(250px,1fr))",
+        gap: 22,
         marginTop: 18
       }}>
-        {sampleTutorials.map((tut, idx) => (
+        {curatedTips.map((item, idx) => (
           <div
             key={idx}
             style={{
-              background: "rgba(16,17,27,0.89)",
-              borderRadius: 10,
-              padding: 12,
-              border: "1.5px solid var(--vs-household)",
-              display: "flex", flexDirection: "column", alignItems: "center",
-              textAlign: "center", minHeight: 140
+              background: "rgba(16,17,27,0.92)",
+              borderRadius: 11,
+              padding: 14,
+              border: "2px solid var(--vs-household)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "stretch",
+              textAlign: "left",
+              minHeight: 170,
+              position: "relative",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.13)"
             }}
           >
-            <div style={{ fontWeight: 700, color: "var(--vs-accent)", fontSize: "1.03rem", marginBottom: 7 }}>
-              {tut.title}
-            </div>
             <div style={{
-              color: "var(--vs-carddarker)",
-              fontSize: "0.96rem",
-              marginBottom: 9
+              fontWeight: 700,
+              color: "var(--vs-accent)",
+              fontSize: "1.11rem",
+              marginBottom: 6,
+              display: "flex",
+              alignItems: "center",
+              gap: 7
             }}>
-              {tut.desc}
+              <span style={{ fontSize: 24 }}>{item.icon}</span>
+              {item.title}
             </div>
-            <a
-              href={tut.video}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn"
-              style={btnStyle("household")}
-            >
-              Watch Tutorial
-            </a>
+            {item.image &&
+              <img
+                src={item.image}
+                alt={item.title}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: 90,
+                  objectFit: "cover",
+                  borderRadius: 7,
+                  marginBottom: 8,
+                  background: "#232426"
+                }}
+              />
+            }
+            <ul style={{
+              color: "var(--vs-carddarker)",
+              fontSize: "0.98rem",
+              margin: 0,
+              paddingLeft: 18,
+              listStyle: "square"
+            }}>
+              {item.points.map((pt, i) => (
+                <li key={i} style={{ marginBottom: 4 }}>{pt}</li>
+              ))}
+            </ul>
           </div>
         ))}
+      </div>
+      <div style={{
+        color: "var(--vs-household)",
+        marginTop: 32,
+        textAlign: "center",
+        fontSize: "1.01rem",
+        opacity: 0.91,
+        fontWeight: 500
+      }}>
+        Have your own tips? Share them with your family! <br />
+        For video demos, search "Indian home hacks" or "kitchen tips" on YouTube for more inspiration.
       </div>
     </section>
   );
