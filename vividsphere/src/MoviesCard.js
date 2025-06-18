@@ -2,30 +2,37 @@ import React, { useEffect, useState } from "react";
 
 /**
  * MoviesCard
- * Card to explore popular movies from TMDb API.
+ * Card to explore popular Tamil movies from TMDb API.
  * Supports previewMode (grid card) or full display.
  */
 // PUBLIC_INTERFACE
 function MoviesCard({ previewMode, onClick, onBack }) {
   const API_KEY = "5bc67d3b06aecbd18121a3cbbc16eb59";
-  // Use 'language=ta' for Tamil, and region IN. Include both parameters, fetch more results.
-  // Show a mix of trending/discover for better Tamil coverage.
-  const TAMIL_DISCOVER_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=ta&region=IN&with_original_language=ta&sort_by=popularity.desc&page=1`;
+  // Use 'language=ta' for Tamil, and region IN. Fetch two pages of discover + trending to get more results.
+  const TAMIL_DISCOVER_URL_1 = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=ta&region=IN&with_original_language=ta&sort_by=popularity.desc&page=1`;
+  const TAMIL_DISCOVER_URL_2 = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=ta&region=IN&with_original_language=ta&sort_by=popularity.desc&page=2`;
   const TAMIL_TRENDING_URL = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=ta&region=IN`;
-  
+
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(!previewMode); // Don't auto-load in preview
   const [error, setError] = useState(null);
 
-  // Fetch Tamil movies from both endpoints and dedupe.
+  // Fetch Tamil movies from multiple endpoints for more results.
   useEffect(() => {
     if (!previewMode) {
       setLoading(true);
       setError(null);
       Promise.all([
-        fetch(TAMIL_DISCOVER_URL)
+        fetch(TAMIL_DISCOVER_URL_1)
           .then(r => {
-            if (!r.ok) throw new Error("TMDb discover failed");
+            if (!r.ok) throw new Error("TMDb discover page 1 failed");
+            return r.json();
+          })
+          .then(data => Array.isArray(data.results) ? data.results : [])
+          .catch(() => []),
+        fetch(TAMIL_DISCOVER_URL_2)
+          .then(r => {
+            if (!r.ok) throw new Error("TMDb discover page 2 failed");
             return r.json();
           })
           .then(data => Array.isArray(data.results) ? data.results : [])
@@ -38,9 +45,9 @@ function MoviesCard({ previewMode, onClick, onBack }) {
           .then(data => Array.isArray(data.results) ? data.results : [])
           .catch(() => [])
       ])
-        .then(([discoverResults, trendingResults]) => {
-          // Deduplicate by movie ID, prefer trending first
-          const combined = [...(trendingResults || []), ...(discoverResults || [])];
+        .then(([discoverP1, discoverP2, trending]) => {
+          // Deduplicate by movie ID, prefer trending > discover p1 > discover p2
+          const combined = [...(trending || []), ...(discoverP1 || []), ...(discoverP2 || [])];
           const seen = new Set();
           const moviesDeduped = [];
           for (const movie of combined) {
@@ -91,7 +98,7 @@ function MoviesCard({ previewMode, onClick, onBack }) {
         <div className="vs-row" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px,1fr))", gap: 18, marginTop: 18 }}>
           {movies.length === 0
             ? <div>No movies found.</div>
-            : movies.slice(0, 18).map(movie => (
+            : movies.slice(0, 30).map(movie => (
               <div key={movie.id}
                 style={{
                   background: "rgba(17,20,40,0.81)",
