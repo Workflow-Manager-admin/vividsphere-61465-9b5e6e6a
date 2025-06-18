@@ -7,8 +7,12 @@ import React, { useEffect, useState } from "react";
  */
 // PUBLIC_INTERFACE
 function CookingCard({ previewMode, onClick, onBack }) {
+  // This API key is for demo/personal use only. In production, use env variable or backend proxy.
   const API_KEY = "472624e314c44c30b8be3d737a51807f";
-  const API_URL = `https://api.spoonacular.com/recipes/random?number=10&apiKey=${API_KEY}`;
+  // Fetch more recipes and filter for South Indian (focus on Indian, Tamil, South Indian cuisine)
+  // We use cuisines/Tamil/South+Indian in tags/keywords as Spoonacular does not have a "Tamil" cuisine, so we try combinations.
+  // This endpoint pulls random recipes, but lets us filter by cuisine and tags/keywords for best result
+  const API_URL = `https://api.spoonacular.com/recipes/random?number=18&cuisine=Indian&tags=South+Indian,Tamil&apiKey=${API_KEY}`;
 
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(!previewMode);
@@ -49,7 +53,7 @@ function CookingCard({ previewMode, onClick, onBack }) {
       >
         <span style={iconStyle("cooking")}>🍳</span>
         <div style={{ fontWeight: 700, fontSize: "1.17rem" }}>Cooking Recipes</div>
-        <div style={descStyle}>Find trending recipe ideas for every mood.<br />Powered by Spoonacular.</div>
+        <div style={descStyle}>South Indian &amp; Tamil recipe inspiration!<br />Powered by Spoonacular.</div>
       </div>
     );
   }
@@ -57,8 +61,11 @@ function CookingCard({ previewMode, onClick, onBack }) {
   // Expanded
   return (
     <section className="vs-section cooking" style={sectionStyle}>
-      <SectionHeader icon="🍳" color="var(--vs-cooking)">Cooking Recipes</SectionHeader>
-      <div style={descStyle}>Delicious random recipes from <a href="https://spoonacular.com/food-api" style={{ color: "var(--vs-cooking)" }} target="_blank" rel="noreferrer">Spoonacular</a></div>
+      <SectionHeader icon="🍳" color="var(--vs-cooking)">Indian &amp; Tamil Cooking Recipes</SectionHeader>
+      <div style={descStyle}>
+        Curated selection of Indian, Tamil, and South Indian dishes.<br />
+        Recipes sourced via <a href="https://spoonacular.com/food-api" style={{ color: "var(--vs-cooking)" }} target="_blank" rel="noreferrer">Spoonacular</a>.
+      </div>
       {onBack && <button className="btn" style={backBtnStyle} onClick={onBack}>Back to Categories</button>}
       {loading && <div style={{ color: "var(--vs-cooking)" }}>Loading recipes…</div>}
       {error && <div style={{ color: "#d14343" }}>Error: {error}</div>}
