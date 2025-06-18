@@ -1,4 +1,19 @@
 :root {
+  /* VividSphere main palette */
+  --vs-primary: #0d0808;
+  --vs-secondary: #ff0000;
+  --vs-accent: #ffffff;
+  --vs-desc: rgba(255,255,255,0.8);
+  --vs-card: #18141a;
+  --vs-cardborder: #302530;
+  --vs-carddarker: #bcb9bc;
+  /* Individual category colors */
+  --vs-movie: #4328ca;
+  --vs-cooking: #e87a41;
+  --vs-household: #0ca646;
+  --vs-drawing: #d464e6;
+  --vs-funvideos: #d40076;
+  /* App old palette */
   --base-light: #00ffff;
   --base-dark: #00008b;
   --text-color: #ffffff;
